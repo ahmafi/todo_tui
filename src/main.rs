@@ -2,10 +2,15 @@ use color_eyre::Result;
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 use ratatui::{
     DefaultTerminal, Frame,
+    layout::{Constraint, Direction, Layout},
     style::Stylize,
     text::Line,
-    widgets::{Block, Paragraph},
+    widgets::{Block, Borders, Paragraph},
 };
+
+use crate::todo::list::TodoList;
+
+mod todo;
 
 fn main() -> color_eyre::Result<()> {
     color_eyre::install()?;
@@ -45,19 +50,37 @@ impl App {
     /// - <https://docs.rs/ratatui/latest/ratatui/widgets/index.html>
     /// - <https://github.com/ratatui/ratatui/tree/main/ratatui-widgets/examples>
     fn render(&mut self, frame: &mut Frame) {
-        let title = Line::from("Ratatui Simple Template")
-            .bold()
-            .blue()
-            .centered();
-        let text = "Hello, Ratatui!\n\n\
-            Created using https://github.com/ratatui/templates\n\
-            Press `Esc`, `Ctrl-C` or `q` to stop running.";
+        let layout =
+            Layout::new(Direction::Horizontal, [Constraint::Ratio(1, 3); 3]).split(frame.area());
+
+        let mut todo_list = TodoList::new("default");
+
         frame.render_widget(
-            Paragraph::new(text)
-                .block(Block::bordered().title(title))
-                .centered(),
-            frame.area(),
-        )
+            Paragraph::new("0").block(Block::new().borders(Borders::ALL)),
+            layout[0],
+        );
+        frame.render_widget(
+            Paragraph::new("1").block(Block::new().borders(Borders::ALL)),
+            layout[1],
+        );
+        frame.render_widget(
+            Paragraph::new("2").block(Block::new().borders(Borders::ALL)),
+            layout[2],
+        );
+
+        // let title = Line::from("Ratatui Simple Template")
+        //     .bold()
+        //     .blue()
+        //     .centered();
+        // let text = "Hello, Ratatui!\n\n\
+        //     Created using https://github.com/ratatui/templates\n\
+        //     Press `Esc`, `Ctrl-C` or `q` to stop running.";
+        // frame.render_widget(
+        //     Paragraph::new(text)
+        //         .block(Block::bordered().title(title))
+        //         .centered(),
+        //     frame.area(),
+        // )
     }
 
     /// Reads the crossterm events and updates the state of [`App`].
