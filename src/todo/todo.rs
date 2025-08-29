@@ -1,5 +1,6 @@
 use uuid::Uuid;
 
+#[derive(PartialEq)]
 pub enum TodoStatus {
     TODO,
     DOING,
@@ -8,8 +9,8 @@ pub enum TodoStatus {
 
 pub struct Todo {
     id: Uuid,
-    title: String,
-    status: TodoStatus,
+    pub title: String,
+    pub status: TodoStatus,
 }
 
 impl Todo {
@@ -19,5 +20,9 @@ impl Todo {
             title: title.into(),
             status: status,
         }
+    }
+
+    pub fn id(&self) -> &Uuid {
+        &self.id
     }
 }
